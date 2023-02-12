@@ -9,13 +9,13 @@ const mysql = require('mysql2')
 // })
 
 
-const pool = new mysql.createPool({
-  host: '127.0.0.1',
-  user: 'root',
-  connectionLimit: 10,
-  password: 'Passord1',
-  database: 'databaseapp'
-});
+// const pool = new mysql.createPool({
+//   host: '127.0.0.1',
+//   user: 'root',
+//   connectionLimit: 10,
+//   password: 'Passord1',
+//   database: 'databaseapp'
+// });
 
 
 
@@ -25,4 +25,24 @@ const pool = new mysql.createPool({
 // export connection
 
 
-module.exports = pool;
+const { DBsequelizeUser, DBdatabaseapp} = require('../configuration');
+
+const pool_DBdatabaseapp = new mysql.createPool(DBdatabaseapp);
+const pool_DBsequelizeUser = new mysql.createPool(DBsequelizeUser);
+
+//connection
+// const connection = pool_DBsequelizeUser.getConnection();
+//connection
+// const connection = pool_DBdatabaseapp.getConnection();
+
+
+
+
+
+
+
+
+module.exports = {
+  'pool': pool_DBdatabaseapp,
+  'pool2': pool_DBsequelizeUser
+}

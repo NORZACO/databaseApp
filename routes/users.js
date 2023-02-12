@@ -1,171 +1,77 @@
-
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const router = express.Router();
-const pool = require('./connections');
+var express = require('express');
+var fs = require('fs');
+var path = require('path');
+var router = express.Router();
 const sql = require('mysql2');
-
-
-
-
-
-
 var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
-
-// /* GET users listing. */
-// router.get('/x', function (req, res, next) {
-//   let users = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/users.json'), 'utf-8'));
-//   res.render('users', { users: users });
-// });
+const { pool } = require('../routes/connections');
+const { Sequelize, Model, DataTypes } = require('sequelize');
+const { DBsequelizeUser, DBdatabaseapp } = require('../configuration');
 
 
 
-// router.get('/', function (req, res, next) {
-//   connectDb.query('SELECT 1 as number', (err, result) => {
-//     if (err) console.log(err)
-//     console.dir(result)
-//   })
-//   let users = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/users.json'), 'utf-8'));
-//   // console.log(users);
-//   res.render('users', { users: users });
-// });
+initialize()
+async function initialize() {
+  connection = {
+    dialect: "mysql",
+    dialectModel: "mysql2",
+    DBsequelizeUser
+  }
 
 
 
-// router.get('/', function (req, res, next) {
-//   pool.query('SELECT * FROM Users', (err, result) => {
-//     console.dir(result);
-//     // let users = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/users.json'), 'utf-8'));
-//     // console.log(users)
-//     res.render('users', { users: result });
-//   });
-// });
 
 
-router.get('/', function (req, res, next) {
-  pool.query('SELECT * FROM Users', (err, results) => {
-    if (err) return next(err);
-    res.render('users', { users: results });
+  initialize()
+
+  async function initialize() {
+    connection = {
+      dialect: "mysql",
+      dialectModel: "mysql2",
+      DBsequelizeUser
+    }
+
+    console.log(connection);
+
+    // connect to db
+    const sequelize = new Sequelize(connection);
+
+    // init models and add them to the exported db object
+    const User = sequelize.define('User', {
+      username: DataTypes.STRING,
+      birthday: DataTypes.DATE,
+    });
+
+    // sync all models with database
+    await sequelize.sync({ alter: true });
+  }
+
+  /* GET users listing. */
+  router.get('/', function (req, res, next) {
+    pool.query('SELECT * FROM Users', (err, data) => {
+      res.render('users', { users: data });
+    })
   });
-});
+
+}
 
 
-
-// router.post('/', jsonParser, function (req, res, next) {
-//   let toAddArray = req.body.users;
-//   const query = 'INSERT INTO Users(FirstName, LastName) VALUES ' + toAddArray.map(user => `('${user.FirstName}','${user.LastName}')`).toString();
-//   console.log(query);
-//   pool.query(query, (err, data) => {
-//     console.dir(data);
-//     res.end()
-//   });
-// });
-
-
-// Wrapping the function in an async function and using await when executing the query to make the code easier to read and to handle errors more effectively.
-// Escaping the values to prevent SQL injection attacks
-// Replacing .toString() with .join(', ') to construct the query string in a safer and cleaner way.
-// Adding error handling in case the query fails.
-
-
-// INSERT INTO Users(FirstName, LastName) VALUES ('Kendrick','Lamar'),('Drake','Graham'),('J. Cole','Cole'),('Travis','Scott'),('Kanye','West')
-// ResultSetHeader {
-//   fieldCount: 0,
-//   affectedRows: 5,
-//   insertId: 9,
-//   info: 'Records: 5  Duplicates: 0  Warnings: 0',
-//   serverStatus: 2,
-//   warningStatus: 0
-// }
-
-// router.post('/', jsonParser, function(req, res, next) {
-//   let toAddArray = req.body.users;
-//   const query = 'INSERT INTO Users(FirstName, LastName) VALUES ' + toAddArray.map(user => `('${user.FirstName}','${user.LastName}')`).toString();
-//   console.log(query);
-//   pool.query(query, (err, result) => {
-//     console.dir(result);
-//     res.end()
-//   })
-// });
-
-
-
-router.post('/', jsonParser, function (req, res, next) {
-  let toAddArray = req.body.users;
-  const query = 'INSERT INTO Users(FirstName, LastName) VALUES ' + toAddArray.map(user => `('${user.FirstName}','${user.LastName}')`).toString();
-  // const query = 'INSERT INTO Users(FirstName, LastName) VALUES ' + toAddArray.map(user => (`${user.FirstName}`, `${user.LastName}`)).toString();
-  console.log(query);
-  pool.query(query, (err, result) => {
-    console.dir(result);
-    if (err) {
-      console.error(err);
-      res.status(500).json({
-        error: 'Failed to insert users to the database'
-      });
-    } else {
-      console.log('Users added successfully');
-      res.status(200).json({
-        message: 'Users added successfully'
-      });
-    }
-  })
-});
-
-
-
-
-router.delete('/', function (req, res, next) {
-  let users = req.params.users;
-  const query = `DELETE FROM Users WHERE UserID = 1`;
-  console.log(query);
-  pool.query(query, (err, result) => {
-    console.dir(result);
-    if (err) {
-      console.error(err);
-      res.status(500).json({
-        error: 'Failed to delete user from the database'
-      });
-    } else {
-      console.log('User deleted successfully');
-      res.status(200).json({
-        message: 'User deleted successfully'
-      });
-    }
-  })
-});
-
-
-
-
-
-const createRouter = (request, response) => {
-  const { username, email, password, biograph, description } = request.body;
-
-  // validate inputs
-  if (!username || !email || !password) {
-    response.status(400).send("Username, email and password are required fields");
-    return;
-  }
-  if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-    response.status(400).send("Invalid email address");
-    return;
-  }
-  if (password.length < 8) {
-    response.status(400).send("Password must be at least 8 characters long");
-    return;
-  }
-
-  const query = `INSERT INTO users (username, email, password, biograph, description) VALUES ($1, $2, $3, $4, $5)`;
-  const values = [username, email, password, biograph, description];
-
-  databaseConnection.query(query, values, (error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(201).send(`User ${username} created with email: ${email}`);
+  router.post('/', jsonParser, function (req, res, next) {
+    let toAddArray = req.body.users;
+    let values = toAddArray.map(user => `('${user.FirstName}','${user.LastName}')`).toString();
+    let query = `INSERT INTO Users(FirstName, LastName) VALUES ${values}`;
+    console.log(query);
+    pool.query(query, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({ error: "Failed to add users" });
+      } else {
+        console.dir(data);
+        res.send({ message: "Users added successfully" });
+      }
+    });
   });
-};
 
-module.exports = router;
+
+  module.exports = router;

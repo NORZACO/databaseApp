@@ -33,7 +33,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+app.use('/users', usersRouter);
 // app.use('/delete', usersRouter);
 
 
@@ -47,11 +47,11 @@ app.use('/', indexRouter);
 // app.use('/users/:id', deleteUser)
 // app.use('/', userRouterV);
 
-app.use('/member', getUsers);
-app.use('/member/:id', getUserById);
-app.use('/member', createUser);
-app.use('/member/:id', updateUser);
-app.use('/member/:id', deleteUser);
+// app.use('/member', getUsers);
+// app.use('/member/:id', getUserById);
+// app.use('/member', createUser);
+// app.use('/member/:id', updateUser);
+// app.use('/member/:id', deleteUser);
 // app.use('/admin', getUsers);
 // app.use('/admin/:id', getUserById);
 
@@ -62,12 +62,12 @@ app.use('/member/:id', deleteUser);
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
