@@ -13,45 +13,45 @@ const { DBsequelizeUser, DBdatabaseapp } = require('../configuration');
 
 
 
-initialize()
-async function initialize() {
-  connection = {
-    dialect: "mysql",
-    dialectModel: "mysql2",
-    DBsequelizeUser
-  }
+// initialize()
+// async function initialize() {
+//   connection = {
+//     dialect: "mysql",
+//     dialectModel: "mysql2",
+//     DBsequelizeUser
+//   }
 
 
 
 
 
-  initialize()
+//   initialize()
 
-  async function initialize() {
-    connection = {
-      dialect: "mysql",
-      dialectModel: "mysql2",
-      database: DBsequelizeUser.database,
-      username: "sequelizeUser",
-      password: DBsequelizeUser.password,
-      host: DBsequelizeUser.host,
-      // DBsequelizeUser
-    }
-    console.log(connection);
+//   async function initialize() {
+//     connection = {
+//       dialect: "mysql",
+//       dialectModel: "mysql2",
+//       database: DBsequelizeUser.database,
+//       username: "sequelizeUser",
+//       password: DBsequelizeUser.password,
+//       host: DBsequelizeUser.host,
+//       // DBsequelizeUser
+//     }
+//     console.log(connection);
 
-    // connect to db
-    const sequelize = new Sequelize(connection);
+//     // connect to db
+//     const sequelize = new Sequelize(connection);
 
-    // init models and add them to the exported db object
-    const User = sequelize.define('User', {
-      username: DataTypes.STRING,
-      birthday: DataTypes.DATE,
-    });
+//     // init models and add them to the exported db object
+//     const User = sequelize.define('User', {
+//       username: DataTypes.STRING,
+//       birthday: DataTypes.DATE,
+//     });
 
-    // sync all models with database
-    await sequelize.sync({ alter: true });
-  }
-}
+//     // sync all models with database
+//     await sequelize.sync({ alter: true });
+//   }
+// }
 
 
 /* GET users listing. */

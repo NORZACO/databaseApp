@@ -1,9 +1,13 @@
 const Sequelize = require('sequelize');
 const { DBsequelizeUser, MYSQLdialects } = require('../configuration');
+// dotenv
+// const dotenv = require('dotenv');
+require('dotenv').config()
 
 
 // Define the database connection details
-const dialect =MYSQLdialects.mysql;
+// const dialect = MYSQLdialects.mysql
+const dialect =  process.env.MYSQL
 const dbName = DBsequelizeUser.database
 const userName = DBsequelizeUser.username || 'sequelizeUser'
 const password = DBsequelizeUser.password
@@ -27,3 +31,5 @@ sequelize.sync({ alter: true });
 
 // Export the `db` object as the module
 module.exports = db;
+
+// console.log('db', db);

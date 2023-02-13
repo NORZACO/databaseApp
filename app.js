@@ -18,6 +18,7 @@ const { deleteUser } = require('./routes/cruder/delete_user');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var userRouter = require('./routes/users/users');
 // var userRouterV = require('./routes/member');
 
 var app = express();
@@ -34,8 +35,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-// app.use('/delete', usersRouter);
+app.use('/users/user', userRouter);
+//user id
+// app.use('/users/:id', userRouter);
 
+// app.use('/users/:id', (req, res, next) => {
+//   switch(req.params.id) {
+//     case 'John':
+//     case 'Barbara':
+//     case 'Jamie':
+//     case 'Patrick':
+//     case 'Bruker1':
+//       userRouter(req, res, next);
+//       break;
+//     default:
+//       res.status(404).send('User not found');
+//       break;
+//   }
+// });
 
 
 
