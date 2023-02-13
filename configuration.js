@@ -15,7 +15,7 @@ const DBdatabaseapp = {
     user: process.env.USER || 'root',
     connectionLimit: process.env.CONNECTION_LIMIT || 10,
     password: process.env.PASSWORD || 'Passord1',
-    database: process.env.DATABASE || 'databaseapp'
+    database: process.env.DATABASE || 'sequelizedatabase'
   };
 
 
